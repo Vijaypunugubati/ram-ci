@@ -231,16 +231,13 @@ def pullBinaries(fabBaseVersion, fabRepo) {
 // Clone the repository with specific branch name with depth 1(latest commit)
 // 
 def cloneScm(repoName, branchName) {
-      sh "figlet CLONE $repoName"
-      checkout([
-        $class: 'GitSCM',
-          branches: [[name: 'refs/heads/$branchName']],
-          extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '$WORKSPACE/gopath/src/github.com/hyperledger/$repoName']],
-          userRemoteConfigs: [[credentialsId: 'hyperledger-jobbuilder', name: 'origin',
-                            refspec: '+refs/heads/$branchName:refs/remotes/origin/$branchName',
-                            url: 'git://cloud.hyperledger.org/mirror/$repoName.git']]])
-      sh """ set +x -ue
-      cd $WORKSPACE/gopath/src/github.com/hyperledger/$repoName
+  try {
+    sh 'figlet CLONE $repoName'
+    dir("${WORKSPACE}/gopath/src/github.com/hyperledger") {
+    sh """set +x -eu
+     cd $WORKSPACE/gopath/src/github.com/hyperledger
+     git clone --single-branch -b $branchName https://github.com/hyperledger/$repoName
+     cd $repoName
       workDir=\$(pwd | grep -o '[^/]*\$')
       if [ "\$workDir" = "$repoName" ]; then
         echo " #### COMMIT LOG #### "
@@ -251,8 +248,16 @@ def cloneScm(repoName, branchName) {
       else
         echo "======= FAILED to CLONE the repository ======= "
       fi
-    """
+     """
+    }
+  }
+  catch (err) {
+    failure_stage = "cloneScm"
+    currentBuild.result = 'FAILURE'
+    throw err
+  }
 }
+
 // Build fabric* images
 def fabBuildImages(repoName, makeTarget) {
   sh """ set +x -ue
