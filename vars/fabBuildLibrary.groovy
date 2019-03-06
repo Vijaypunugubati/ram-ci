@@ -231,10 +231,12 @@ def pullBinaries(fabBaseVersion, fabRepo) {
 // Clone the repository with specific branch name with depth 1(latest commit)
 // 
 def cloneScm(repoName, branchName) {
-  sh """set +x -eu
+  sh '''set +x -eu
     cd $WORKSPACE/gopath/src/github.com/hyperledger
     figlet CLONE $repoName
     git clone --single-branch $branchName --depth=1 git://cloud.hyperledger.org/mirror/$repoName.git
+  '''
+  sh """ set +x -ue
     cd $repoName
     workDir=\$(pwd | grep -o '[^/]*\$')
     if [ "\$workDir" = "$repoName" ]; then
