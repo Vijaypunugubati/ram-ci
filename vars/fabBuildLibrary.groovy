@@ -254,11 +254,11 @@ def cloneScm(repoName, branchName) {
 def fabBuildImages(repoName, makeTarget) {
   sh """
     cd $WORKSPACE/gopath/src/github.com/hyperledger/$repoName
-    // Build fab docker images
-    figlet -l BUILD IMAGES
+    # Build fab docker images
+    figlet BUILD IMAGES
     make clean $makeTarget
-    // check image is created or not
-    // image=$(ls .build/images)
-    // [ ! -z $(docker images -q hyperledger/fabric-\$image) ] || echo "\$image does not exist"; exit 1
+    # check image is created or not
+    # image=$(ls .build/images)
+    # [ ! -z $(docker images -q hyperledger/fabric-\$image) ] || echo "\$image does not exist"; exit 1
   """
 }
