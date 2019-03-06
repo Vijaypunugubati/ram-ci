@@ -24,6 +24,7 @@ def cleanupEnv() {
       fi
       git clone --single-branch -b master --depth=1 git://cloud.hyperledger.org/mirror/ci-management
       cd ci-management
+      chmod +x jjb/common-scripts/include-raw-fabric-clean-environment.sh
       ./jjb/common-scripts/include-raw-fabric-clean-environment.sh
     '''
     }
