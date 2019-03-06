@@ -231,11 +231,16 @@ def pullBinaries(fabBaseVersion, fabRepo) {
 // Clone the repository with specific branch name with depth 1(latest commit)
 // 
 def cloneScm(repoName, branchName) {
-      sh 'cd $WORKSPACE/gopath/src/github.com/hyperledger'
       sh "figlet CLONE $repoName"
-      sh "if(git clone --single-branch $branchName --depth=1 git://cloud.hyperledger.org/mirror/$repoName.git)"
-    sh """set +x -eu
-      cd $repoName
+      checkout([
+        $class: 'GitSCM',
+          branches: [[name: 'refs/heads/$branchName']],
+          extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '$WORKSPACE/gopath/src/github.com/hyperledger/$repoName']],
+          userRemoteConfigs: [[credentialsId: 'hyperledger-jobbuilder', name: 'origin',
+                            refspec: '+refs/heads/$branchName:refs/remotes/origin/$branchName',
+                            url: 'git://cloud.hyperledger.org/mirror/$repoName.git']]])
+      sh """ set +x -ue
+      cd $WORKSPACE/gopath/src/github.com/hyperledger/$repoName
       workDir=\$(pwd | grep -o '[^/]*\$')
       if [ "\$workDir" = "$repoName" ]; then
         echo " #### COMMIT LOG #### "
