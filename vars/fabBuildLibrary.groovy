@@ -234,9 +234,7 @@ def cloneScm(repoName, branchName) {
   sh """set +x -eu
     cd $WORKSPACE/gopath/src/github.com/hyperledger
     figlet CLONE $repoName
-    if ! git clone --single-branch $branchName --depth=1 git://cloud.hyperledger.org/mirror/$repoName.git; then
-      echo -e "\033[31m ##### FAILED to clone $repoName ##### \033[0m"
-    fi
+    git clone --single-branch $branchName --depth=1 git://cloud.hyperledger.org/mirror/$repoName.git
     cd $repoName
     workDir=\$(pwd | grep -o '[^/]*\$')
     if [ "\$workDir" = "$repoName" ]; then
