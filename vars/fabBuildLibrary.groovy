@@ -238,7 +238,7 @@ def cloneScm(repoName, branchName) {
       echo -e "\033[31m ##### FAILED to clone $repoName ##### \033[0m"
     fi
     cd $repoName
-    workDir=\$(echo "${PWD##*/}")
+    workDir=\$(pwd | grep -o '[^/]*$')
     if [ "\$workDir" = "$repoName" ]; then
       echo " #### COMMIT LOG #### "
       echo
