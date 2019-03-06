@@ -16,7 +16,7 @@ def loadProperties() {
 def cleanupEnv() {
   try {
     echo "-------> Clean Environment"
-    figlet -l CLEAN WS
+    sh 'figlet CLEAN WS'
     dir("${WORKSPACE}/gopath/src/github.com/hyperledger/ci-management") {
     sh '''set +x -eu
       if [ -d "ci-management" ]; then
@@ -40,7 +40,7 @@ def cleanupEnv() {
 def envOutput() {
   try {
     echo "-------> Jenkins Environment Details....."
-    figlet -l ENV OUTPUT
+    sh 'figlet ENV OUTPUT'
     sh '''set +x -eu
       uname -a
       cat /etc/*-release
